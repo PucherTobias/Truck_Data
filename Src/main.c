@@ -48,9 +48,16 @@
 /* USER CODE BEGIN PV */
 
 uint32_t test_writearray[] = {1,2,3,4,5,6,7,8,9};
-uint32_t test_readarray[9];
 
-uint32_t w_velocity[] = {246,
+
+uint32_t read_velocity[169];
+int32_t read_angle[169];
+uint32_t read_thrust[169];
+uint32_t read_steering[169];
+
+int lol = 0;
+
+uint32_t w_velocity[] = {240,
 99,
 171,
 1,
@@ -220,7 +227,7 @@ uint32_t w_velocity[] = {246,
 21,
 13,
 };
-uint32_t w_angle[] = {6,
+int32_t w_angle[] = {6,
 6,
 6,
 6,
@@ -755,17 +762,6 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	int setval = 0;
-	static int32_t uwtick_Hold10ms;
-  static int32_t uwtick_Hold100ms; 
-  static int32_t uwtick_Hold1s;
-	int i=0; 
-	
-	uwtick_Hold10ms=0;
-  uwtick_Hold100ms=0;
-  uwtick_Hold1s=0;
-
-	//Pucher
 
 
   /* USER CODE END 1 */
@@ -791,15 +787,40 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
-	////////////////flash
-	for(int i=0; i<167; i++){
-		
-	MY_FLASH_SetSectorAddrs(11, 0x081C0000);
-	MY_FLASH_WriteN(0, w_velocity[i], 9, DATA_TYPE_32);
-
-		
-	}
+	////////////////flash mit den adressen von Oben nach unten Durcharbeiten.. anders geht es nicht
+	//WRITE
 	
+	lol= 1;
+	//Velocity
+	MY_FLASH_SetSectorAddrs(8, 0x08100000);
+//	MY_FLASH_WriteN(0, w_velocity, 169, DATA_TYPE_32);
+	MY_FLASH_ReadN(0, read_velocity, 169, DATA_TYPE_32);
+//	HAL_Delay(10);
+	lol=2;
+	//Angle
+	MY_FLASH_SetSectorAddrs(9, 0x08140000);
+//	MY_FLASH_WriteN(0, w_angle, 169, DATA_TYPE_32);
+	MY_FLASH_ReadN(0, read_angle, 169, DATA_TYPE_32);
+
+lol=3;
+//	//Thrust
+	MY_FLASH_SetSectorAddrs(10, 0x08180000);
+//	MY_FLASH_WriteN(0, w_thrust, 169, DATA_TYPE_32);
+	MY_FLASH_ReadN(0, read_thrust, 169, DATA_TYPE_32);
+	
+	lol=4;
+//	//Steering
+	MY_FLASH_SetSectorAddrs(11, 0x081C0000);
+//	MY_FLASH_WriteN(0, w_steering, 169, DATA_TYPE_32);
+	MY_FLASH_ReadN(0, read_steering, 169, DATA_TYPE_32);
+
+	lol = 5;
+	
+	
+	//READ
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -810,11 +831,16 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	//flash datenübertragung
-	MY_FLASH_ReadN(0, test_readarray, 9, DATA_TYPE_32);
+		lol = 6;
 	
-	HAL_Delay(1000);
-
+//		
+//	MY_FLASH_SetSectorAddrs(11, 0x081E0000);
+//	MY_FLASH_ReadN(0, read_thrust, 169, DATA_TYPE_32);
+//	
+//		
+//	MY_FLASH_SetSectorAddrs(11, 0x081F0000);
+//	MY_FLASH_ReadN(0, read_steering, 169, DATA_TYPE_32);
+//
 	
   }		// while Ende
 
